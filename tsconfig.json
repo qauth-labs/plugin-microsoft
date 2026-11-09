@@ -16,5 +16,7 @@
     "skipLibCheck": false,
     "noEmit": true
   },
-  "include": ["src", "test", "e2e", "*.ts"]
+  "include": ["src", "test", "e2e", "*.ts"],
+  // The end-to-end run's throwaway files, and QAuth's own checkout it builds the images from.
+  "exclude": ["e2e/.work", "e2e/.work-qauth"]
 }
