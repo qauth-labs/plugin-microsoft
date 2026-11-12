@@ -1,0 +1,68 @@
+{
+  "name": "@qauth-labs/plugin-microsoft",
+  "version": "0.1.0-rc.0",
+  "description": "Sign in with Microsoft (the Microsoft identity platform, Microsoft Entra ID) for QAuth, as an upstream OpenID Connect preset: one tenant, or the multi-tenant endpoints with each token bound to its own tenant. Experimental.",
+  "keywords": [
+    "qauth",
+    "qauth-plugin",
+    "upstream-oidc-preset",
+    "microsoft",
+    "entra-id",
+    "openid-connect",
+    "sign-in"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/qauth-labs/plugin-microsoft#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qauth-labs/plugin-microsoft.git"
+  },
+  "bugs": {
+    "url": "https://github.com/qauth-labs/plugin-microsoft/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=26.10.0"
+  },
+  "packageManager": "pnpm@12.14.0",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "oxlint",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "test": "vitest run",
+    "e2e": "bash e2e/run.sh",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "@qauth-labs/plugin-sdk": "0.2.3"
+  },
+  "peerDependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "oxfmt": "0.73.0",
+    "oxlint": "1.88.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5",
+    "zod": "^4.6.7"
+  }
+}

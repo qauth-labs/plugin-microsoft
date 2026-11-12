@@ -1,0 +1,14 @@
+{
+  "entries": [
+    {
+      "host": "login.microsoftonline.com",
+      "realms": ["master"],
+      "note": "The mock identity platform's login host. It opens nothing for this plugin: a preset's calls are remote_document destinations, which no entry opens (compose.yml)."
+    },
+    {
+      "host": "graph.microsoft.com",
+      "realms": ["master"],
+      "note": "The mock's Microsoft Graph host, where the discovery document puts userinfo. The same holds."
+    }
+  ]
+}
