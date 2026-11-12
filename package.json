@@ -1,6 +1,6 @@
 {
   "name": "@qauth-labs/plugin-microsoft",
-  "version": "0.1.0-rc.0",
+  "version": "0.1.0",
   "description": "Sign in with Microsoft (the Microsoft identity platform, Microsoft Entra ID) for QAuth, as an upstream OpenID Connect preset: one tenant, or the multi-tenant endpoints with each token bound to its own tenant. Experimental.",
   "keywords": [
     "qauth",
