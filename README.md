@@ -5,14 +5,6 @@
 > this package may change before QAuth 1.0. Do not rely on it for production
 > sign-in yet.
 
-> **Not released yet.** Two of its dependencies are temporary. The plugin SDK
-> it is written against, the one with the upstream OpenID Connect preset shape
-> (qauth-labs/qauth#671), is not on npm yet: the package depends on the SDK
-> tarball in [`vendor/`](vendor/README.md) until it is. And no released QAuth
-> image carries the preset loader yet: the end-to-end suite builds the server
-> images from the qauth commit in `e2e/qauth-commit`. Both switch before the
-> first release ([RELEASING.md](RELEASING.md)).
-
 Sign in with Microsoft for [QAuth](https://github.com/qauth-labs/qauth): the
 Microsoft identity platform's v2.0 endpoints (Microsoft Entra ID), as an
 upstream OpenID Connect preset. A realm that enables it offers "Microsoft" as
@@ -22,15 +14,15 @@ identity. Applications keep receiving QAuth's own OAuth 2.1 and OpenID Connect
 tokens.
 
 The plugin is made and released by the QAuth project, in its own repository,
-the way a third party writes a plugin: it depends only on the plugin SDK,
-[`@qauth-labs/plugin-sdk`](https://www.npmjs.com/package/@qauth-labs/plugin-sdk),
+the way a third party writes a plugin: it depends only on the published
+[`@qauth-labs/plugin-sdk`](https://www.npmjs.com/package/@qauth-labs/plugin-sdk)
 and has its own version line.
 
 ## Compatibility
 
-| Plugin               | QAuth server                                                | AuthMethod contract        | Plugin SDK                                                       |
-| -------------------- | ----------------------------------------------------------- | -------------------------- | ---------------------------------------------------------------- |
-| `0.1.0-rc.0` (to be) | the first release that carries qauth-labs/qauth#671 (to be) | `qauth-auth-method/1-rc.0` | the release that carries #671 (for now the tarball in `vendor/`) |
+| Plugin       | QAuth server               | AuthMethod contract        | Plugin SDK |
+| ------------ | -------------------------- | -------------------------- | ---------- |
+| `0.1.0-rc.0` | `0.2.3` and later on `0.2` | `qauth-auth-method/1-rc.0` | `0.2.3`    |
 
 ## How it signs a person in
 
@@ -110,8 +102,8 @@ provider changes its brand assets, and a copy here would go stale.
 
 ## Install it (operators)
 
-You need a QAuth release that carries the preset loader (qauth-labs/qauth#671),
-and an image you build on top of QAuth's released one.
+You need QAuth `0.2.3` or later, and an image you build on top of QAuth's
+released one.
 
 ### 1. Register the app in Microsoft Entra ID
 
@@ -146,13 +138,13 @@ your build context, without installing anything:
 mkdir plugins && cd plugins
 npm init --yes > /dev/null
 npm install --package-lock-only --save-exact --omit=dev --omit=peer \
-  --install-strategy=nested --ignore-scripts @qauth-labs/plugin-microsoft@<version>
+  --install-strategy=nested --ignore-scripts @qauth-labs/plugin-microsoft@0.1.0-rc.0
 ```
 
 Read `package-lock.json` and commit both files. Then:
 
 ```dockerfile
-ARG QAUTH_IMAGE=ghcr.io/qauth-labs/qauth/auth-server:<version>@sha256:<digest>
+ARG QAUTH_IMAGE=ghcr.io/qauth-labs/qauth/auth-server:0.2.3@sha256:<digest>
 
 # The build stage writes the files the server will run: pin it by digest too.
 FROM node:26-alpine@sha256:<digest> AS plugin
@@ -241,15 +233,15 @@ pnpm run lint && pnpm run format:check && pnpm run typecheck && pnpm test
 fixed tenant and both multi-tenant endpoints, and the unit tests of the config
 schema, the provider config each tenant makes and the attribute rules.
 
-The end-to-end suite needs docker, git, openssl, Node and pnpm:
+The end-to-end suite needs docker, openssl, Node and pnpm:
 
 ```sh
 pnpm run e2e
 ```
 
-It packs the plugin, builds the QAuth server image with the plugin added as
-above, starts it with PostgreSQL, Redis and a mock of the identity platform
-that answers as `login.microsoftonline.com` and `graph.microsoft.com`,
+It packs the plugin, builds QAuth's released server image with the plugin
+added as above, starts it with PostgreSQL, Redis and a mock of the identity
+platform that answers as `login.microsoftonline.com` and `graph.microsoft.com`,
 configures the plugin through the admin API and signs in through the server's
 pages. It checks that:
 
@@ -266,9 +258,8 @@ pages. It checks that:
   database, the logs or the events;
 - with `PLUGIN_API_ENABLED` off, the boot skips the plugin and says why.
 
-For now it builds QAuth's images from `e2e/qauth-commit` first
-(`e2e/qauth-images.sh`, temporary). CI runs both on every pull request.
-Releases are described in [RELEASING.md](RELEASING.md).
+CI runs both on every pull request. Releases are described in
+[RELEASING.md](RELEASING.md).
 
 ## Not yet
 

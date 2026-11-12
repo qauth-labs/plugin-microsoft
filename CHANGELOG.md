@@ -8,24 +8,20 @@ release (RELEASING.md).
 
 ## [Unreleased]
 
-The first version, not released yet. Experimental: QAuth loads it only with
-`PLUGIN_API_ENABLED=true`, and its plugin API may change before QAuth 1.0.
+## [0.1.0-rc.0]
 
-Two of its dependencies are temporary, and both go before the first release
-candidate (RELEASING.md): the plugin SDK is the tarball in `vendor/`, until
-the SDK release that carries qauth-labs/qauth#671 is on npm; and the
-end-to-end suite builds QAuth's server and migration-runner images from the
-qauth commit `e2e/qauth-commit` names, until a released image carries the
-preset loader.
+The first release candidate. Experimental: QAuth loads it only with
+`PLUGIN_API_ENABLED=true`, and its plugin API may change before QAuth 1.0.
 
 ### Added
 
 - Sign in with Microsoft (the Microsoft identity platform's v2.0 endpoints,
-  Microsoft Entra ID) as a QAuth upstream OpenID Connect preset: the package
-  exports `upstreamOidcPreset`, and QAuth's own OpenID Connect client runs the
-  protocol (discovery, PKCE with S256, `state` and `nonce`, the ID token and
-  key set checks). It depends only on `@qauth-labs/plugin-sdk`, with `zod` as
-  a peer, and holds no key.
+  Microsoft Entra ID) as a QAuth upstream OpenID Connect preset (contract
+  `qauth-auth-method/1-rc.0`), for QAuth 0.2.3 and later on the 0.2 line: the
+  package exports `upstreamOidcPreset`, and QAuth's own OpenID Connect client
+  runs the protocol (discovery, PKCE with S256, `state` and `nonce`, the ID
+  token and key set checks). It depends only on `@qauth-labs/plugin-sdk`
+  `0.2.3`, with `zod` as a peer, and holds no key.
 - A fixed tenant, given as a lower-case tenant id: only that tenant's tokens
   are accepted. Or the multi-tenant `organizations` and `common` endpoints: a
   token is accepted only when its `iss` is
@@ -42,9 +38,10 @@ preset loader.
   through the egress client QAuth hands the plugin.
 - The sign-in page shows the provider's name, with no logo.
 - CI with the plugin SDK's preset kit, and an end-to-end suite that runs the
-  QAuth server image with the plugin installed against a mock of the
-  identity platform.
+  released QAuth server image with the plugin installed, against a mock of
+  the identity platform.
 - A release workflow that stages the package on npm through trusted
   publishing, for a maintainer's approval with 2FA.
 
-[Unreleased]: https://github.com/qauth-labs/plugin-microsoft/commits/main
+[Unreleased]: https://github.com/qauth-labs/plugin-microsoft/compare/v0.1.0-rc.0...HEAD
+[0.1.0-rc.0]: https://github.com/qauth-labs/plugin-microsoft/releases/tag/v0.1.0-rc.0

@@ -1,11 +1,6 @@
-# The end-to-end suite's deployment (run.sh starts it): QAuth's server image
-# with this plugin added (Dockerfile), its migration runner, and a mock of the
-# Microsoft identity platform.
-#
-# The images. QAUTH_IMAGE and QAUTH_MIGRATION_IMAGE are, for now, the ones
-# qauth-images.sh builds from the qauth commit e2e/qauth-commit names, since
-# no released image carries the preset loader (qauth-labs/qauth#671) yet.
-# run.sh sets both.
+# The end-to-end suite's deployment (run.sh starts it): QAuth's released
+# images, the server with this plugin added (Dockerfile) and the migration
+# runner, and a mock of the Microsoft identity platform.
 #
 # The mock answers as the platform's own hosts, login.microsoftonline.com and
 # graph.microsoft.com: network aliases on the `identity-platform` network,
@@ -30,8 +25,6 @@ x-server: &server
   build:
     context: .
     dockerfile: Dockerfile
-    args:
-      QAUTH_IMAGE: ${QAUTH_IMAGE:?run e2e/run.sh}
   image: plugin-microsoft-e2e/auth-server:local
   environment: &server-env
     NODE_ENV: production
@@ -104,7 +97,7 @@ services:
       retries: 30
 
   migrate:
-    image: ${QAUTH_MIGRATION_IMAGE:?run e2e/run.sh}
+    image: ghcr.io/qauth-labs/qauth/migration-runner:0.2.3@sha256:0cb5fdaf25ddf8b5cf8813fda9bdfa29c4c0fea2cb6809082b3583f33ffdc585
     environment:
       DATABASE_URL: postgres://qauth:qauth@postgres:5432/qauth
     depends_on:

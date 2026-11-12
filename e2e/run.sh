@@ -1,17 +1,11 @@
 #!/usr/bin/env bash
-# The end-to-end suite: QAuth's server image with this plugin installed the
-# way an operator installs it, against a mock of the Microsoft identity
-# platform, driven over HTTP by e2e/microsoft.e2e.test.ts.
+# The end-to-end suite: QAuth's released server image with this plugin
+# installed the way an operator installs it, against a mock of the Microsoft
+# identity platform, driven over HTTP by e2e/microsoft.e2e.test.ts.
 #
-# Needs docker (with compose), git, openssl, node and pnpm. Run it from
-# anywhere:
+# Needs docker (with compose), openssl, node and pnpm. Run it from anywhere:
 #
 #   pnpm run e2e
-#
-# The server images are QAUTH_IMAGE and QAUTH_MIGRATION_IMAGE. Unset, they
-# are the ones e2e/qauth-images.sh builds from the qauth commit
-# e2e/qauth-commit names (TEMPORARY: no released image carries the preset
-# loader, qauth-labs/qauth#671, yet), and this script runs it first.
 #
 # It packs the plugin as npm would receive it, makes throwaway secrets and a
 # throwaway CA in e2e/.work/, builds the image (e2e/Dockerfile), starts the
@@ -23,16 +17,6 @@ here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 root="$(dirname "$here")"
 work="$here/.work"
 compose=(docker compose --file "$here/compose.yml")
-
-commit="$(tr -d '[:space:]' < "$here/qauth-commit")"
-default_server="qauth-e2e/auth-server:$commit"
-default_migration="qauth-e2e/migration-runner:$commit"
-QAUTH_IMAGE="${QAUTH_IMAGE:-$default_server}"
-QAUTH_MIGRATION_IMAGE="${QAUTH_MIGRATION_IMAGE:-$default_migration}"
-export QAUTH_IMAGE QAUTH_MIGRATION_IMAGE
-if [ "$QAUTH_IMAGE" = "$default_server" ] || [ "$QAUTH_MIGRATION_IMAGE" = "$default_migration" ]; then
-  bash "$here/qauth-images.sh"
-fi
 
 rm -rf "$work"
 mkdir -p "$work/certs" "$work/ca" "$work/keys" "$work/pack"
@@ -69,12 +53,9 @@ export MOCK_MICROSOFT_CLIENT_ID MOCK_MICROSOFT_CLIENT_SECRET
 # The allowlist is read through a bind mount; others must not be able to write it.
 chmod 644 "$here/egress-allowlist.json"
 
-# The plugin as npm would receive it, and the plugin SDK it brings along
-# (TEMPORARY: the vendored tarball, until the SDK release that carries #671
-# is on npm; e2e/Dockerfile unpacks both).
+# The plugin as npm would receive it.
 (cd "$root" && pnpm run build > /dev/null && pnpm pack --pack-destination "$work/pack" > /dev/null)
 cp "$work"/pack/*.tgz "$work/plugin.tgz"
-cp "$root/vendor/qauth-labs-plugin-sdk-0.2.2.tgz" "$work/plugin-sdk.tgz"
 
 finish() {
   local status=$?

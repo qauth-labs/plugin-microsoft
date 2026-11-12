@@ -20,23 +20,6 @@ The package has its own version line, not QAuth's.
   AuthMethod contract each version is for. Update it in the same pull request
   as the version.
 
-## Before the first release
-
-Two dependencies are temporary, and both go before `0.1.0-rc.0` is tagged:
-
-- **The plugin SDK** is the tarball in `vendor/` (`vendor/README.md`), since
-  the SDK release with the upstream OpenID Connect preset shape
-  (qauth-labs/qauth#671) is not on npm yet. Once it is, depend on that version
-  from npm, add it to `pnpm-workspace.yaml`'s cooldown exceptions while it is
-  younger than seven days, delete `vendor/`, and put `e2e/Dockerfile`'s
-  `npm install` line back.
-- **The server images** of the end-to-end suite are built from the qauth
-  commit `e2e/qauth-commit` names (`e2e/qauth-images.sh`), since no released
-  image carries the preset loader yet. Once a release does, pin its
-  `auth-server` and `migration-runner` images by digest in `e2e/run.sh` and
-  `e2e/compose.yml`, drop the CI step that builds them, and delete
-  `e2e/qauth-images.sh` and `e2e/qauth-commit`.
-
 ## Cut a release
 
 1. In a pull request, set `version` in `package.json` (for example
